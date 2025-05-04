@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-extern chisel::Command auton_intake_command;
+
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -15,6 +15,8 @@ const int SWING_SPEED = 110;
 
 // Global variables declared in main.cpp
 extern int armTarget; 
+extern chisel::Command auton_intake_command;
+
 
 ///
 // Constants
@@ -379,28 +381,48 @@ void measure_offsets() {
   if (chassis.odom_tracker_front != nullptr) chassis.odom_tracker_front->distance_to_center_set(f_offset);
 }
 
+void set_mogo_up() {
+  mogo.set_value(false); // set the mogo to up
+  pros::delay(500);
+}
+
+void set_mogo_down() {
+  mogo.set_value(true); // set the mogo to down
+  pros::delay(500);
+}
+
 void blue_left_auton()
 {
-
+  setAllianceBlue();
 }
 
 void blue_right_auton()
 {
-
+  setAllianceBlue();
 }
 
 void red_left_auton()
 {
-
+  setAllianceRed();
 }
 
 void red_right_auton()
 {
+  setAllianceRed();
   //ez::screen_print("Starting red right");
   auton_intake_command.priority = 551; // set it to higher than manual
-  setArmTarget(20000); // centidegrees
-  pros::delay(1000);
+  
+  //setArmTarget(20000); // centidegrees
+  pros::delay(750);
+  chassis.pid_drive_set(-6_in, 50, true);
+  chassis.pid_wait();
+  set_mogo_down();
   auton_intake_command.power = 127;
+
+  chassis.pid_drive_set(45_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
   pros::delay(2000);
   auton_intake_command.power = 0;
   auton_intake_command.priority = 0; // set it back to 0 so manual can override it

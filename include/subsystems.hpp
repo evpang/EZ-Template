@@ -21,3 +21,7 @@ inline pros::adi::DigitalOut rightDoinker ('G');
 
 // arm
 void setArmTarget(int targetInCentidegrees);
+
+// alliance
+void setAllianceBlue();
+void setAllianceRed();
