@@ -90,7 +90,7 @@ void color_sort_update() {
 
 
 const int numStates = 2;
-int states[numStates] = {2800, 17000};
+int states[numStates] = {3000, 17000};
 int currState = 1;
 int armTarget = 0;
 int multiplier = 350;
@@ -98,7 +98,7 @@ bool armPIDEnabled = false;
 
 void nextState(){
   currState = (currState + 1) % numStates;
-  armTarget = states[currState];
+  setArmTarget(states[currState]);
 }
 
 int convertArmPosition(int position) {
@@ -124,6 +124,10 @@ void liftArm(){
   arm.move(velocity);
 }
 
+void setArmTarget(int targetInCentidegrees) {
+  armPIDEnabled = true;
+  armTarget = targetInCentidegrees;
+}
 
 /*Old code
 int lift_Arm() {
@@ -467,7 +471,6 @@ void opcontrol() {
     
     
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)){
-      armPIDEnabled = true;
       nextState();
     }
 

@@ -396,7 +396,7 @@ void red_left_auton()
 void red_right_auton()
 {
   //ez::screen_print("Starting red right");
-  armTarget = 200;
+  setArmTarget(200);
   intake.move(127);
 }
 

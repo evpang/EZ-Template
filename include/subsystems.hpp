@@ -18,3 +18,6 @@ inline pros::Optical optical(1);
 inline pros::adi::DigitalOut mogo ('H');
 inline pros::adi::DigitalOut leftDoinker ('A');
 inline pros::adi::DigitalOut rightDoinker ('G');
+
+// arm
+void setArmTarget(int targetInCentidegrees);
