@@ -115,12 +115,12 @@ void liftArm(){
   if (abs(error) < 100) {
     velocity = 0;
   }
-
+/*
   ez::screen_print("Arm Rotation: " + util::to_string_with_precision(convertedArmRotation)
     + ", " + util::to_string_with_precision(velocity) + 
     ", " + util::to_string_with_precision(error) + 
     ", " + util::to_string_with_precision(armTarget), 6);
-
+*/
   arm.move(velocity);
 }
 
@@ -295,7 +295,7 @@ void autonomous() {
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
-  chassis.pid_tuner_toggle();
+  //chassis.pid_tuner_toggle();
   /*
   Odometry and Pure Pursuit are not magic
 
@@ -437,13 +437,15 @@ void opcontrol() {
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
 
     //intake
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      driver_intake_command.power = 127;
-  } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      driver_intake_command.power = -127;
-  } else {
-      driver_intake_command.power = 0;
-  }
+
+      if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        driver_intake_command.power = 127;
+      } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        driver_intake_command.power = -127;
+      } else {
+        driver_intake_command.power = 0;
+      }
+    
     // pros::c::optical_rgb_s_t rgb_value = colorSorter.get_rgb();
     // if(!determineColor(100, 100, 'r', rgb_value)){
     //   pros::delay(15);

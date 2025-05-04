@@ -1,6 +1,7 @@
 #include "main.h"
 
 
+extern chisel::Command auton_intake_command;
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -396,8 +397,13 @@ void red_left_auton()
 void red_right_auton()
 {
   //ez::screen_print("Starting red right");
-  setArmTarget(200);
-  intake.move(127);
+  auton_intake_command.priority = 551; // set it to higher than manual
+  setArmTarget(20000); // centidegrees
+  pros::delay(1000);
+  auton_intake_command.power = 127;
+  pros::delay(2000);
+  auton_intake_command.power = 0;
+  auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
 
