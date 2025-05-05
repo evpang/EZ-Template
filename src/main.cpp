@@ -5,6 +5,7 @@
 // https://ez-robotics.github.io/EZ-Template/
 /////
 bool alliance = true; //true = red false = blue
+bool color_sort_enabled = false;
 constexpr double BLUE_RING_HUE = 215;
 constexpr double RED_RING_HUE = 5;
 constexpr double RING_HUE_TOLOERANCE = 15;
@@ -30,13 +31,17 @@ uint32_t last_outtake = 0;
 
 void setAllianceBlue() {
   alliance = false;
+  color_sort_enabled = true;
 }
 
 void setAllianceRed() {
   alliance = true;
+  color_sort_enabled = true;
 }
 
 void queue_outtake() {
+
+  if (color_sort_enabled) {
     pros::delay(0);
 
     color_sort_command.power = -30;
@@ -45,6 +50,7 @@ void queue_outtake() {
     pros::delay(200);
 
     color_sort_command.priority = 0;
+  }
 }
 
 void color_sort_update() {
@@ -213,21 +219,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      // {"Blue Left", blue_left_auton},
-      // {"Blue Right", blue_right_auton},
-      // {"Red Left", red_left_auton},
       {"Red Right", red_right_auton},
-      {"Drive\n\nDrive forward and come back", drive_example},
-      {"Turn\n\nTurn 3 times.", turn_example},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
-      {"Combine all 3 movements", combining_movements},
-      {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
-      {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
-      {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
-      {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
+      {"Blue Left", blue_left_auton},
+      {"Blue Right", blue_right_auton},
+      {"Red Left", red_left_auton},
+      {"Test Robot", test_robot},
       {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
   });
 
@@ -430,13 +426,18 @@ void opcontrol() {
   chassis.drive_brake_set(MOTOR_BRAKE_COAST);
 
   // Trigger the selected autonomous routine
-  if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
-    autonomous();
-  }
+  // if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
+  //   autonomous();
+  // }
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
+
+    if(master.get_digital_new_press(DIGITAL_UP)){
+      color_sort_enabled = !color_sort_enabled;
+      master.rumble(color_sort_enabled ? "." : "---");
+    }
 
     // chassis.opcontrol_tank();  // Tank control
     chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade

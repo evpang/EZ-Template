@@ -10,7 +10,7 @@
 
 // These are out of 127
 const int DRIVE_SPEED = 110;
-const int TURN_SPEED = 90;
+const int TURN_SPEED = 90; //original 90
 const int SWING_SPEED = 110;
 
 // Global variables declared in main.cpp
@@ -383,33 +383,228 @@ void measure_offsets() {
 
 void set_mogo_up() {
   mogo.set_value(false); // set the mogo to up
-  pros::delay(500);
+  // pros::delay(500);
 }
 
 void set_mogo_down() {
   mogo.set_value(true); // set the mogo to down
+  // pros::delay(500);
+}
+
+void left_doinker_down() {
+  leftDoinker.set_value(true); // set the left doinker to down
+  // pros::delay(500);
+}
+
+void left_doinker_up() {
+  leftDoinker.set_value(false); // set the left doinker to up
+  // pros::delay(500);
+}
+
+void right_doinker_down() {
+  rightDoinker.set_value(true); // set the right doinker to down
+  pros::delay(500);
+}
+
+void right_doinker_up() {
+  rightDoinker.set_value(false); // set the right doinker to up
   pros::delay(500);
 }
 
 void blue_left_auton()
 {
   setAllianceBlue();
+  auton_intake_command.priority = 551; // set it to higher than manual
+
+  //Need at end of every auton 
+  pros::delay(2000);
+  auton_intake_command.power = 0;
+  auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
 void blue_right_auton()
 {
   setAllianceBlue();
+  auton_intake_command.priority = 551; // set it to higher than manual
+
+  //Need at end of every auton 
+  pros::delay(2000);
+  auton_intake_command.power = 0;
+  auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
 void red_left_auton()
 {
   setAllianceRed();
+  auton_intake_command.priority = 551; // set it to higher than manual
+
+  //Need at end of every auton 
+  pros::delay(2000);
+  auton_intake_command.power = 0;
+  auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
 void red_right_auton()
 {
   setAllianceRed();
-  //ez::screen_print("Starting red right");
+  auton_intake_command.priority = 551; // set it to higher than manual
+
+  chassis.pid_drive_chain_constant_set(4_in);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, false);
+  chassis.pid_wait();
+  set_mogo_down();
+  pros::delay(100);
+  auton_intake_command.power = 127;
+  pros::delay(500);
+  chassis.pid_turn_set(134_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  auton_intake_command.power = 0;
+  right_doinker_down();
+  chassis.pid_drive_set(24_in, 127, false);
+  chassis.pid_wait_quick();
+  chassis.pid_turn_set(180_deg, 90);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(1.5_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  auton_intake_command.power = -127;
+  // // chassis.pid_drive_set(-2_in, DRIVE_SPEED, false);
+  // // chassis.pid_wait();
+  chassis.pid_turn_set(155_deg, 127);
+  chassis.pid_wait_quick_chain();
+  left_doinker_down();
+  // pros::delay(100);
+  // chassis.pid_drive_set(1_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(135, 127);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(-40_in, 100, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(180_deg, TURN_SPEED);
+  // pros::delay(200);
+  // left_doinker_up();
+  // chassis.pid_wait_quick_chain();
+  // right_doinker_up();
+  // auton_intake_command.power = 127;
+  // chassis.pid_turn_set(140, 127);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(17_in, 127, false);
+  // chassis.pid_wait_quick_chain();
+  // pros::delay(500);
+  // chassis.pid_turn_set(270_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(0_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+
+
+  //quick wait
+  // chassis.pid_drive_set(-24_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // set_mogo_down();
+  // pros::delay(100);
+  // auton_intake_command.power = 127;
+  // pros::delay(500);
+  // chassis.pid_turn_set(135_deg, TURN_SPEED);
+  // chassis.pid_wait_quick();
+  // auton_intake_command.power = 0;
+  // right_doinker_down();
+  // chassis.pid_drive_set(25_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick();
+  // chassis.pid_turn_set(180_deg, 127);
+  // chassis.pid_wait_quick();
+  // chassis.pid_drive_set(3.5_in, 127, false);
+  // auton_intake_command.power = -127;
+  // chassis.pid_wait_quick();
+  // // chassis.pid_drive_set(-2_in, DRIVE_SPEED, false);
+  // // chassis.pid_wait();
+  // chassis.pid_turn_set(155_deg, 127);
+  // chassis.pid_wait_quick();
+  // left_doinker_down();
+  // pros::delay(100);
+  // chassis.pid_drive_set(1_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick();
+  // chassis.pid_turn_set(135, 127);
+  // chassis.pid_wait_quick();
+  // chassis.pid_drive_set(-40_in, 100, false);
+  // chassis.pid_wait_quick();
+  // chassis.pid_turn_set(180_deg, TURN_SPEED);
+  // pros::delay(200);
+  // left_doinker_up();
+  // chassis.pid_wait_quick();
+  // right_doinker_up();
+  // auton_intake_command.power = 127;
+  // chassis.pid_turn_set(140, 127);
+  // chassis.pid_wait_quick();
+  // chassis.pid_drive_set(17_in, 127, false);
+  // chassis.pid_wait_quick();
+  // pros::delay(500);
+  // chassis.pid_turn_set(270_deg, TURN_SPEED);
+  // chassis.pid_wait_quick();
+  // chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick();
+  // chassis.pid_turn_set(0_deg, TURN_SPEED);
+  // chassis.pid_wait_quick();
+
+  //regular wait
+
+  // setAllianceRed();
+  // auton_intake_command.priority = 551; // set it to higher than manual
+  // chassis.pid_drive_set(-24_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // set_mogo_down();
+  // pros::delay(100);
+  // auton_intake_command.power = 127;
+  // pros::delay(500);
+  // chassis.pid_turn_set(135_deg, TURN_SPEED);
+  // chassis.pid_wait();
+  // auton_intake_command.power = 0;
+  // right_doinker_down();
+  // chassis.pid_drive_set(25_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // chassis.pid_turn_set(180_deg, 127);
+  // chassis.pid_wait();
+  // chassis.pid_drive_set(3.5_in, 127, false);
+  // auton_intake_command.power = -127;
+  // chassis.pid_wait();
+  // // chassis.pid_drive_set(-2_in, DRIVE_SPEED, false);
+  // // chassis.pid_wait();
+  // chassis.pid_turn_set(155_deg, 127);
+  // chassis.pid_wait();
+  // left_doinker_down();
+  // pros::delay(100);
+  // chassis.pid_drive_set(1_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // chassis.pid_turn_set(135, 127);
+  // chassis.pid_wait();
+  // chassis.pid_drive_set(-40_in, 100, false);
+  // chassis.pid_wait();
+  // chassis.pid_turn_set(180_deg, TURN_SPEED);
+  // pros::delay(200);
+  // left_doinker_up();
+  // chassis.pid_wait();
+  // right_doinker_up();
+  // auton_intake_command.power = 127;
+  // chassis.pid_turn_set(140, 127);
+  // chassis.pid_wait();
+  // chassis.pid_drive_set(17_in, 127, false);
+  // chassis.pid_wait();
+  // pros::delay(500);
+  // chassis.pid_turn_set(270_deg, TURN_SPEED);
+  // chassis.pid_wait();
+  // chassis.pid_drive_set(35_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // chassis.pid_turn_set(0_deg, TURN_SPEED);
+  // chassis.pid_wait();
+  //Need at end of every auton 
+  pros::delay(2000);
+  auton_intake_command.power = 0;
+  auton_intake_command.priority = 0; // set it back to 0 so manual can override it
+}
+
+void test_robot()
+{
+  setAllianceRed();
   auton_intake_command.priority = 551; // set it to higher than manual
   
   //setArmTarget(20000); // centidegrees
@@ -423,6 +618,11 @@ void red_right_auton()
   chassis.pid_wait();
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait();
+
+  //left_doinker_down();
+  //left_doinker_up();
+
+  //Need at end of every auton 
   pros::delay(2000);
   auton_intake_command.power = 0;
   auton_intake_command.priority = 0; // set it back to 0 so manual can override it
