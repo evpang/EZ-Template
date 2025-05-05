@@ -490,7 +490,7 @@ void red_right_auton()
   chassis.pid_wait_quick_chain();
   chassis.pid_drive_set(8_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();
-  chassis.pid_turn_set(270_deg, TURN_SPEED);
+  chassis.pid_turn_set(250  `1QA_deg, TURN_SPEED);
   chassis.pid_wait_quick_chain();
   chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();
