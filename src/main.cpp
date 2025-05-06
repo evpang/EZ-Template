@@ -127,8 +127,8 @@ int convertArmPosition(int position) {
 void liftArm(){
   double kp = 0.016;
   double kd = 0.07;
-  double ki = 0.001; 
-  double offset = 14.0; // this is the minimum abs(velocity) even when error is zero. this is needed to overcome gravity of the arm.
+  double ki = 0.0001; 
+  double offset = 18.0; // this is the minimum abs(velocity) even when error is zero. this is needed to overcome gravity of the arm.
   double tolerance = 80; // the tolerance for the arm to be considered "locked"
   int error_threshold_for_ki = 500; // the error threshold for ki to be added to the total error
   int convertedArmRotation = convertArmPosition(armRotation.get_position());
@@ -141,9 +141,9 @@ void liftArm(){
   double velocity = kp * error + kiTerm + kdTerm; // PID equation
   
   // add the effect of gravity 
-  if (convertedArmRotation < 9500 && error > 100) {
+  if (convertedArmRotation < 9500 && error > 0) {
     velocity = velocity + offset;
-  } else if (convertedArmRotation > 9500 && error < -100) {
+  } else if (convertedArmRotation > 9500 && error < 0) {
     velocity = velocity - offset; 
   }
 
@@ -156,9 +156,7 @@ void liftArm(){
     isArmLocked = false; 
     if (abs(error) < error_threshold_for_ki) {
       totalError = totalError + error; // only add to the total error if we are within 500 degrees of the target
-    } else {
-      totalError = 0; // reset the total error if we are not within 500 degrees of the target
-    }
+    } 
 
     if (abs(error) < tolerance) {
       numIterationsWithinTolerance++;
