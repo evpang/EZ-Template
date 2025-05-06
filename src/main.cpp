@@ -104,11 +104,16 @@ void color_sort_update() {
 
 
 const int numStates = 2;
-int states[numStates] = {3500, 17000};
+int states[numStates] = {3350, 17000};
 int currState = 1;
 int armTarget = 0;
 int multiplier = 350;
 bool armPIDEnabled = false;
+double lastError = 0;
+double totalError = 0;
+bool isArmLocked = false;
+
+int numIterationsWithinTolerance = 0;
 
 void nextState(){
   currState = (currState + 1) % numStates;
@@ -121,25 +126,65 @@ int convertArmPosition(int position) {
 
 void liftArm(){
   double kp = 0.016;
+  double kd = 0.07;
+  double ki = 0.001; 
+  double offset = 14.0; // this is the minimum abs(velocity) even when error is zero. this is needed to overcome gravity of the arm.
+  double tolerance = 80; // the tolerance for the arm to be considered "locked"
+  int error_threshold_for_ki = 500; // the error threshold for ki to be added to the total error
   int convertedArmRotation = convertArmPosition(armRotation.get_position());
   double error = armTarget - convertedArmRotation;
-  double offset = 14.0; // this is the minimum abs(velocity) even when error is zero. this is needed to overcome gravity of the arm.
-  double velocity = kp * error;
-  velocity = (velocity > 0) ? velocity + offset : velocity - offset;
-  if (abs(error) < 100) {
-    velocity = 0;
+
+  double changeInError = error - lastError;
+  
+  double kdTerm = (lastError == 0) ? 0 : changeInError * kd;
+  double kiTerm = (abs(error) < error_threshold_for_ki) ? ki * totalError : 0; // only add to the total error if we are within 500 degrees of the target
+  double velocity = kp * error + kiTerm + kdTerm; // PID equation
+  
+  // add the effect of gravity 
+  if (convertedArmRotation < 9500 && error > 100) {
+    velocity = velocity + offset;
+  } else if (convertedArmRotation > 9500 && error < -100) {
+    velocity = velocity - offset; 
   }
-/*
+
+  if ((abs(error) < tolerance && !isArmLocked && numIterationsWithinTolerance > 5) || // if it's moving, only hold it if it's within 80 centidegrees of the target
+      (abs(error) < 300 && isArmLocked)) { // if it's not moving, have a higher tolerance of movements before unlocking
+    velocity = 0; // lock the arm motor
+    totalError = 0; // reset the total error for ki
+    isArmLocked = true;
+  } else {
+    isArmLocked = false; 
+    if (abs(error) < error_threshold_for_ki) {
+      totalError = totalError + error; // only add to the total error if we are within 500 degrees of the target
+    } else {
+      totalError = 0; // reset the total error if we are not within 500 degrees of the target
+    }
+
+    if (abs(error) < tolerance) {
+      numIterationsWithinTolerance++;
+    } else {
+      numIterationsWithinTolerance = 0; // reset the number of iterations within tolerance
+    }
+  } 
+  
+  
+
+  lastError = error;
+
   ez::screen_print("Arm Rotation: " + util::to_string_with_precision(convertedArmRotation)
     + ", " + util::to_string_with_precision(velocity) + 
     ", " + util::to_string_with_precision(error) + 
-    ", " + util::to_string_with_precision(armTarget), 6);
-*/
-  arm.move(velocity);
+    ", " + util::to_string_with_precision(armTarget) + 
+    ", " + util::to_string_with_precision(totalError), 6);
+
+  if (velocity != 0) { arm.move(velocity); }
+  else { arm.move_velocity(0); } // stop the motor if velocity is 0
+  
 }
 
 void setArmTarget(int targetInCentidegrees) {
   armPIDEnabled = true;
+  totalError = 0; // reest the total error for ki
   armTarget = targetInCentidegrees;
 }
 
