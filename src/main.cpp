@@ -147,7 +147,7 @@ void liftArm(){
     velocity = velocity - offset; 
   }
 
-  if ((abs(error) < tolerance && !isArmLocked && numIterationsWithinTolerance > 5) || // if it's moving, only hold it if it's within 80 centidegrees of the target
+  if ((abs(error) < tolerance && !isArmLocked && numIterationsWithinTolerance > 10) || // if it's moving, only hold it if it's within 80 centidegrees of the target
       (abs(error) < 300 && isArmLocked)) { // if it's not moving, have a higher tolerance of movements before unlocking
     velocity = 0; // lock the arm motor
     totalError = 0; // reset the total error for ki
