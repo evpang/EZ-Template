@@ -403,12 +403,12 @@ void left_doinker_up() {
 
 void right_doinker_down() {
   rightDoinker.set_value(true); // set the right doinker to down
-  pros::delay(500);
+  // pros::delay(500);
 }
 
 void right_doinker_up() {
   rightDoinker.set_value(false); // set the right doinker to up
-  pros::delay(500);
+  // pros::delay(500);
 }
 
 void blue_left_auton()
@@ -459,17 +459,17 @@ void red_right_auton()
   chassis.pid_drive_set(-5_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();
   pros::delay(500);
-  chassis.pid_turn_set(119_deg, TURN_SPEED);
+  chassis.pid_turn_set(116_deg, TURN_SPEED);
   chassis.pid_wait_quick_chain();
   auton_intake_command.power = 0;
   right_doinker_down();
-  chassis.pid_drive_set(11.5_in, DRIVE_SPEED, false);
+  chassis.pid_drive_set(13_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();
   pros::delay(100);
   chassis.pid_turn_set(180_deg, 90);
   chassis.pid_wait_quick_chain();
   pros::delay(100);
-  chassis.pid_turn_set(155_deg, TURN_SPEED);
+  chassis.pid_turn_set(149_deg, TURN_SPEED);
   chassis.pid_wait_quick_chain();
   // chassis.pid_drive_set(0.1_in, 60, false);
   left_doinker_down();
@@ -490,7 +490,7 @@ void red_right_auton()
   chassis.pid_wait_quick_chain();
   chassis.pid_drive_set(8_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();
-  chassis.pid_turn_set(250  `1QA_deg, TURN_SPEED);
+  chassis.pid_turn_set(250_deg, TURN_SPEED);
   chassis.pid_wait_quick_chain();
   chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
   chassis.pid_wait_quick_chain();

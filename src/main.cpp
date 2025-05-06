@@ -104,7 +104,7 @@ void color_sort_update() {
 
 
 const int numStates = 2;
-int states[numStates] = {3000, 17000};
+int states[numStates] = {3500, 17000};
 int currState = 1;
 int armTarget = 0;
 int multiplier = 350;
