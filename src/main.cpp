@@ -169,11 +169,11 @@ void liftArm(){
 
   lastError = error;
 
-  ez::screen_print("Arm Rotation: " + util::to_string_with_precision(convertedArmRotation)
-    + ", " + util::to_string_with_precision(velocity) + 
-    ", " + util::to_string_with_precision(error) + 
-    ", " + util::to_string_with_precision(armTarget) + 
-    ", " + util::to_string_with_precision(totalError), 6);
+  // ez::screen_print("Arm Rotation: " + util::to_string_with_precision(convertedArmRotation)
+  //   + ", " + util::to_string_with_precision(velocity) + 
+  //   ", " + util::to_string_with_precision(error) + 
+  //   ", " + util::to_string_with_precision(armTarget) + 
+  //   ", " + util::to_string_with_precision(totalError), 6);
 
   if (velocity != 0) { arm.move(velocity); }
   else { arm.move_velocity(0); } // stop the motor if velocity is 0
@@ -263,9 +263,9 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
       {"Red Right", red_right_auton},
-      {"Blue Left", blue_left_auton},
       {"Blue Right", blue_right_auton},
       {"Red Left", red_left_auton},
+      {"Blue Left", blue_left_auton},
       {"Test Robot", test_robot},
       {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
   });

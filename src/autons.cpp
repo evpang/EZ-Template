@@ -422,11 +422,81 @@ void blue_left_auton()
   auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
+void negative_auton_base() {
+  setArmTarget(3350);
+  pros::delay(300);
+  auton_intake_command.power = 127;
+  pros::delay(500);
+  auton_intake_command.power = -10;
+  chassis.pid_drive_set(1.1_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  setArmTarget(22000);
+  pros::delay(500);
+  chassis.pid_drive_set(-12.5_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-12_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-11_in, 90, false);
+  chassis.pid_wait();
+  set_mogo_down();
+  setArmTarget(0);
+  pros::delay(200);
+  auton_intake_command.power = 127;
+  pros::delay(200);
+  chassis.pid_turn_set(135_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  if (chassis.odom_theta_direction_get() == false) {
+    chassis.pid_drive_set(15_in, DRIVE_SPEED, false);
+  } else {
+    chassis.pid_drive_set(18_in, DRIVE_SPEED, false);
+  }
+  chassis.pid_wait_quick_chain();
+  
+  // chassis.pid_turn_set(90_deg, 127);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(12_in, 70, false);
+  // chassis.pid_wait_quick_chain();
+  chassis.pid_swing_set(ez::RIGHT_SWING, 90_deg, DRIVE_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(22_in, 70, false);
+  chassis.pid_wait_quick_chain();
+
+  pros::delay(200);
+  chassis.pid_drive_set(-15_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_swing_set(ez::RIGHT_SWING, 135_deg, DRIVE_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-8_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(75_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(12_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(30_in, 115, false);
+  chassis.pid_wait_quick();
+  pros::delay(200);
+  chassis.pid_drive_set(-10_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(5_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+}
+
 void blue_right_auton()
 {
   setAllianceBlue();
   auton_intake_command.priority = 551; // set it to higher than manual
-
+  chassis.drive_angle_set(46.7_deg);
+  chassis.odom_theta_flip(true);
+  chassis.odom_theta_direction_get();
+  negative_auton_base();
   //Need at end of every auton 
   pros::delay(2000);
   auton_intake_command.power = 0;
@@ -437,63 +507,195 @@ void red_left_auton()
 {
   setAllianceRed();
   auton_intake_command.priority = 551; // set it to higher than manual
-
+  chassis.pid_drive_chain_constant_set(4_in);
+  chassis.drive_angle_set(-49_deg);
+  setArmTarget(3350);
+  pros::delay(300);
+  auton_intake_command.power = 127;
+  pros::delay(500);
+  auton_intake_command.power = -10;
+  chassis.pid_drive_set(1.1_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  setArmTarget(22000);
+  pros::delay(500);
+  chassis.pid_drive_set(-12.5_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-12_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-11.5_in, 70, false);
+  chassis.pid_wait();
+  set_mogo_down();
+  setArmTarget(0);
+  pros::delay(200);
+  auton_intake_command.power = 127;
+  pros::delay(200);
+  chassis.pid_turn_set(135_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(15_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  
+  // chassis.pid_turn_set(90_deg, 127);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(12_in, 70, false);
+  // chassis.pid_wait_quick_chain();
+  chassis.pid_swing_set(ez::RIGHT_SWING, 90_deg, DRIVE_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(22_in, 70, false);
+  chassis.pid_wait_quick_chain();
+  pros::delay(200);
+  chassis.pid_drive_set(-15_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_swing_set(ez::RIGHT_SWING, 135_deg, DRIVE_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-8_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(75_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(12_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(22_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(20_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-20_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(20_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(-10_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(-20_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(135_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(-18_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(90_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
   //Need at end of every auton 
   pros::delay(2000);
   auton_intake_command.power = 0;
   auton_intake_command.priority = 0; // set it back to 0 so manual can override it
 }
 
+void positive_auton_base() {
+  chassis.pid_drive_chain_constant_set(4_in);
+  chassis.pid_drive_set(-18_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-10_in, 90, false);
+  chassis.pid_wait();
+  set_mogo_down();
+  pros::delay(200);
+  auton_intake_command.power = 127;
+  pros::delay(500);
+  chassis.pid_turn_set(120_deg, TURN_SPEED);
+  auton_intake_command.power = 0;
+  chassis.pid_wait_quick_chain();
+  if (chassis.odom_theta_direction_get() == false) {
+    right_doinker_down();
+  } else {
+    left_doinker_down();
+  }
+  chassis.pid_drive_set(18_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  auton_intake_command.power = -127;
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(156_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  auton_intake_command.power = 5;
+  chassis.pid_drive_set(2_in, DRIVE_SPEED, false);
+  if (chassis.odom_theta_direction_get() == false) {
+    left_doinker_down();
+  } else {
+    right_doinker_down();
+  }
+  pros::delay(500);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(-40_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_turn_set(170_deg, TURN_SPEED);
+  if (chassis.odom_theta_direction_get() == false) {
+    left_doinker_up();
+  } else {
+    right_doinker_up();
+  }
+  chassis.pid_wait_quick_chain();
+  if (chassis.odom_theta_direction_get() == false) {
+    right_doinker_up();
+  } else {
+    left_doinker_up();
+  }
+  pros::delay(200);
+  chassis.pid_turn_set(140, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  auton_intake_command.power = 127;
+  chassis.pid_drive_set(9_in, 127, false);
+  chassis.pid_wait_quick_chain();
+  pros::delay(500);
+  chassis.pid_turn_set(236_deg, TURN_SPEED);
+  chassis.pid_wait_quick_chain();
+  chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
+  chassis.pid_wait_quick_chain();
+}
+
 void red_right_auton()
 {
   setAllianceRed();
   auton_intake_command.priority = 551; // set it to higher than manual
-
-  chassis.pid_drive_chain_constant_set(4_in);
-  chassis.pid_drive_set(-24_in, DRIVE_SPEED, false);
-  chassis.pid_wait();
-  set_mogo_down();
-  pros::delay(100);
-  auton_intake_command.power = 127;
-  pros::delay(100);
-  chassis.pid_drive_set(-5_in, DRIVE_SPEED, false);
-  chassis.pid_wait_quick_chain();
-  pros::delay(500);
-  chassis.pid_turn_set(116_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-  auton_intake_command.power = 0;
-  right_doinker_down();
-  chassis.pid_drive_set(13_in, DRIVE_SPEED, false);
-  chassis.pid_wait_quick_chain();
-  pros::delay(100);
-  chassis.pid_turn_set(180_deg, 90);
-  chassis.pid_wait_quick_chain();
-  pros::delay(100);
-  chassis.pid_turn_set(149_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-  // chassis.pid_drive_set(0.1_in, 60, false);
-  left_doinker_down();
-  pros::delay(100);
-  chassis.pid_drive_set(0.3_in, 60, false);
-  auton_intake_command.power = -127;
-  chassis.pid_wait_quick_chain();
-  pros::delay(300);
-  chassis.pid_drive_set(-30_in, 100, false);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_turn_set(190_deg, TURN_SPEED);
-  pros::delay(200);
-  left_doinker_up();
-  chassis.pid_wait_quick_chain();
-  right_doinker_up();
-  auton_intake_command.power = 127;
-  chassis.pid_turn_set(145, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(8_in, DRIVE_SPEED, false);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_turn_set(250_deg, TURN_SPEED);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
-  chassis.pid_wait_quick_chain();
+  chassis.odom_theta_flip(false);
+  chassis.odom_theta_direction_get();
+  positive_auton_base();
+  // chassis.pid_drive_chain_constant_set(4_in);
+  // chassis.pid_drive_set(-24_in, DRIVE_SPEED, false);
+  // chassis.pid_wait();
+  // set_mogo_down();
+  // pros::delay(100);
+  // auton_intake_command.power = 127;
+  // pros::delay(100);
+  // chassis.pid_drive_set(-5_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // pros::delay(500);
+  // chassis.pid_turn_set(116_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // auton_intake_command.power = 0;
+  // right_doinker_down();
+  // chassis.pid_drive_set(13_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // pros::delay(100);
+  // chassis.pid_turn_set(180_deg, 90);
+  // chassis.pid_wait_quick_chain();
+  // pros::delay(100);
+  // chassis.pid_turn_set(149_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // // chassis.pid_drive_set(0.1_in, 60, false);
+  // left_doinker_down();
+  // pros::delay(100);
+  // chassis.pid_drive_set(0.3_in, 60, false);
+  // auton_intake_command.power = -127;
+  // chassis.pid_wait_quick_chain();
+  // pros::delay(300);
+  // chassis.pid_drive_set(-30_in, 100, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(190_deg, TURN_SPEED);
+  // pros::delay(200);
+  // left_doinker_up();
+  // chassis.pid_wait_quick_chain();
+  // right_doinker_up();
+  // auton_intake_command.power = 127;
+  // chassis.pid_turn_set(145, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(8_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_turn_set(250_deg, TURN_SPEED);
+  // chassis.pid_wait_quick_chain();
+  // chassis.pid_drive_set(30_in, DRIVE_SPEED, false);
+  // chassis.pid_wait_quick_chain();
   // chassis.pid_wait_quick_chain();
   // chassis.pid_turn_set(180_deg, TURN_SPEED);
   // pros::delay(200);
